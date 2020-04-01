@@ -17,7 +17,8 @@ src/main.js or src/index.js
 
 import Vue from 'vue';
 import App from './App.vue';
-import VueTables from '@/farena/vue-tables'
+import VueTables from 'vue-tables';
+import 'vue-tables/dist/vue-tables.css';
 
 Vue.use(VueTables);
 ```
@@ -335,7 +336,7 @@ export default {
         // value = true / false;
 
         this.valuesWithCheck.data.map(x => {
-            x.checked = val;
+            x.checked = value;
         });
      },
      onItemChecked(index, val) {
