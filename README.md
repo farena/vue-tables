@@ -175,7 +175,7 @@ More info here: (https://laravel.com/docs/5.8/pagination)
       :actions="vTable.actions"
       :options="vTable.options"
       ref="vtable"
-      @change="getUsers" // subscribe to pagination and filters
+      @changed="getUsers" // subscribe to pagination and filters
     />
 </template>
 
@@ -203,7 +203,7 @@ export default {
     this.$refs.vTable.init(); 
   },
   methods: {
-    // when this functions is called from the @change event, 
+    // when this functions is called from the @changed event, 
     // vue-table will send the params
     getUsers(params = {}) {
       // axios call to backend.
@@ -249,7 +249,7 @@ export default {
       :actions="vTable.actions"
       :options="vTable.options"
       ref="vtable"
-      @change="getUsers"
+      @changed="getUsers"
     />
 </template>
 
@@ -303,7 +303,7 @@ If you turn it on, you have to subscribe to the @checkAll and @itemChecked callb
       :actions="vTable.actions"
       :options="vTable.options"
       ref="vtable"
-      @change="getUsers"
+      @changed="getUsers"
       @checkAll="onCheckAll"
       @itemChecked="onItemChecked"
     />
