@@ -359,3 +359,56 @@ export default {
 </script>
 ```
 
+## Custom CSS
+
+You can use CSS or SCSS to modify the table appearence.
+
+```
+src/main.js or src/index.js
+
+import Vue from 'vue';
+import App from './App.vue';
+import VueTables from 'vue-tables';
+import 'vue-tables/dist/vue-tables.css';
+import 'path/to/my-custom-table-classes.scss';
+
+Vue.use(VueTables);
+```
+
+```
+./my-custom-table-classes.scss
+
+.p_func {
+    .p_func_item {
+        label {}
+        
+        select {}
+        
+        ul {
+            .page-item-desktop {}
+            .page-item-mobile {}
+        }
+    
+        input {}
+    }
+}
+
+// from options you can change your table,
+// table header and table body classes.
+.my-table-class {
+    .my-table-head-class {}
+    .my-table-body-class {}
+
+    tr {}
+    th {}
+    td {}
+
+    input[type=checkbox] {}
+
+    .v-table-tooltip {}
+
+    .btn-group {
+        button {}
+    }
+}
+```
