@@ -3,11 +3,11 @@
     <h1>Vue Tables</h1>
     <vue-table
       v-if="vTable.headers"
+      ref="vtable"
       :values="vTable.values"
       :headers="vTable.headers"
       :actions="vTable.actions"
       :options="vTable.options"
-      ref="vtable"
     />
   </div>
 </template>

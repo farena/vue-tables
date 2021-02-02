@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /**
  * @param params => Object = {
  *     per_page

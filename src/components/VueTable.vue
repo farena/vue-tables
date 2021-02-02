@@ -11,85 +11,130 @@
     <div>
       <table :class="opts.tableClass">
         <thead :class="opts.theadClass">
-        <tr>
-          <td v-if="opts.checkeable">
-            <input type="checkbox" class="mt-2" v-model="checkAll">
-          </td>
-          <template v-for="head in headers">
-            <td :style="{width:head.width ? head.width+'%' : 'auto'}"
-                :key="head.key"
-                :class="head.sortable ? 'sortable' : ''"
-                @click="sorted(head)">
-
-              {{head.mask ? head.mask.ucwords() : head.title ? head.title.ucwords() : ''}}
-
-              <i class="fa"
-                 v-if="head.sortable &&
-                      (sortedBy === head.title || sortedBy === head.sort_value)"
-                 :class="sortedDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'"/>
-              <i class="fa fa-sort"
-                 v-if="head.sortable && sortedBy !== head.title && sortedBy
-                      !== head.sort_value"
-              />
-
+          <tr>
+            <td v-if="opts.checkeable">
+              <input
+                v-model="checkAll"
+                type="checkbox"
+                class="mt-2"
+              >
             </td>
-          </template>
-          <td style="width: 1%"/>
-        </tr>
+            <template v-for="head in headers">
+              <td
+                :key="head.key"
+                :style="{width:head.width ? head.width+'%' : 'auto'}"
+                :class="head.sortable ? 'sortable' : ''"
+                @click="sorted(head)"
+              >
+                {{ head.mask ? head.mask.ucwords() : head.title ? head.title.ucwords() : '' }}
+
+                <i
+                  v-if="head.sortable &&
+                    (sortedBy === head.title || sortedBy === head.sort_value)"
+                  class="fa"
+                  :class="sortedDir === 'desc' ? 'fa-sort-down' : 'fa-sort-up'"
+                />
+                <i
+                  v-if="head.sortable && sortedBy !== head.title && sortedBy
+                    !== head.sort_value"
+                  class="fa fa-sort"
+                />
+              </td>
+            </template>
+            <td style="width: 1%" />
+          </tr>
         </thead>
         <tbody :class="opts.tbodyClass">
-        <template
-          v-if="!values || values.length === 0 ||
-              Object.keys(values).length === 0 && values.constructor === Object">
-          <tr>
-            <td :colspan="headers.length + 1" style="text-align: center">
-              <loader/>
+          <template
+            v-if="!values || values.length === 0 ||
+              Object.keys(values).length === 0 && values.constructor === Object"
+          >
+            <tr>
+              <td
+                :colspan="headers.length + 1"
+                style="text-align: center"
+              >
+                <loader />
+              </td>
+            </tr>
+          </template>
+          <tr
+            v-for="(item,a) in values.data"
+            :key="item.id"
+          >
+            <td v-if="opts.checkeable">
+              <input
+                v-model="item.checked"
+                type="checkbox"
+                class="mt-2"
+                @click="$emit('itemChecked',a, $event.target.checked)"
+              >
+            </td>
+
+            <template
+              v-if="truncate"
+            >
+              <td
+                v-for="(head,b) in headers"
+                :key="b"
+              >
+                <span v-if="item[head.title] && item[head.title].length >= truncate">
+                  {{ head.pre }}{{ item[head.title].slice(0,truncate-3)+'...' }}
+                  <span class="v-table-tooltip">{{ item[head.title] }}</span>
+                </span>
+                <span v-else>
+                  {{ head.pre }}{{ item[head.title] }}
+                </span>
+              </td>
+            </template>
+            <template v-else>
+              <td
+                v-for="(head,b) in headers"
+                :key="b"
+              >
+                {{ head.pre }}{{ item[head.title] }}
+              </td>
+            </template>
+
+            <td style="text-align: right">
+              <div class="btn-group">
+                <template
+                  v-for="(act,i) in actions"
+                >
+                  <button
+                    v-if="item[act.callback] !== false"
+                    :key="i"
+                    class="btn btn-sm"
+                    :class="act.buttonClass"
+                    @click="$emit(act.callback,item)"
+                  >
+                    <i :class="act.icon" />
+                    <span class="v-table-tooltip">{{ act.tooltip }}</span>
+                  </button>
+                </template>
+              </div>
             </td>
           </tr>
-        </template>
-        <tr v-for="(item,a) in values.data" :key="item.id">
-          <td v-if="opts.checkeable">
-            <input type="checkbox" class="mt-2" v-model="item.checked"
-                   @click="$emit('itemChecked',a, $event.target.checked)">
-          </td>
-          <td v-for="(head,b) in headers" :key="b" v-if="truncate">
-            <span v-if="item[head.title] && item[head.title].length >= truncate">
-                {{head.pre}}{{item[head.title].slice(0,truncate-3)+'...'}}
-                <span class="v-table-tooltip">{{item[head.title]}}</span>
-            </span>
-            <span v-else>
-                {{head.pre}}{{item[head.title]}}
-            </span>
-          </td>
-          <td v-for="(head,b) in headers" :key="b" v-if="!truncate">
-            {{head.pre}}{{item[head.title]}}
-          </td>
-          <td style="text-align: right">
-            <div class="btn-group">
-              <button class="btn btn-sm"
-                      v-for="(act,i) in actions"
-                      :key="i"
-                      :class="act.buttonClass"
-                      v-if="item[act.callback] !== false"
-                      @click="$emit(act.callback,item)">
-                <i :class="act.icon"/>
-                <span class="v-table-tooltip">{{act.tooltip}}</span>
-              </button>
-            </div>
-          </td>
-        </tr>
         </tbody>
         <tfoot>
-        <tr>
-          <td colspan="1000" style="text-align: center"
-              v-if="values.data && values.data.length > 0">Mostrando desde
-            <b>{{values.from}}</b> hasta <b>{{values.to}}</b> de <b>{{values.total}}</b>
-            elementos.
-          </td>
-          <td colspan="1000" style="text-align: center"
-              v-if="values.data && values.data.length <= 0">No hay elementos para mostrar.
-          </td>
-        </tr>
+          <tr>
+            <td
+              v-if="values.data && values.data.length > 0"
+              colspan="1000"
+              style="text-align: center"
+            >
+              Mostrando desde
+              <b>{{ values.from }}</b> hasta <b>{{ values.to }}</b> de <b>{{ values.total }}</b>
+              elementos.
+            </td>
+            <td
+              v-if="values.data && values.data.length <= 0"
+              colspan="1000"
+              style="text-align: center"
+            >
+              No hay elementos para mostrar.
+            </td>
+          </tr>
         </tfoot>
       </table>
     </div>
@@ -143,7 +188,7 @@ import PageFunctions from './PageFunctions.vue';
 import loader from './loader.vue';
 
 export default {
-  name: 'vueTables',
+  name: 'VueTables',
   components: {
     PageFunctions,
     loader,
@@ -151,15 +196,19 @@ export default {
   props: {
     headers: {
       type: Array,
+      default: null,
     },
     values: {
       type: Object,
+      default: null,
     },
     options: {
       type: Object,
+      default: null,
     },
     actions: {
       type: Array,
+      default: () => ([]),
     },
     truncate: {
       type: [Number, Boolean],
@@ -173,6 +222,7 @@ export default {
         theadClass: '',
         tbodyClass: '',
         checkeable: false,
+        searchable: true,
 
       },
       sortedBy: '',
@@ -189,39 +239,27 @@ export default {
       checkAll: false,
     };
   },
-  mounted() {
-    if (!this.values) throw new Error('Debe ingresar informacion en el input VALUES. (ej.: :values="myData")');
-    if (!this.headers) throw new Error('Debe ingresar informacion en el input HEADERS. (ej.: :headers="myHeaders")');
-
-    let dateCounter = 0;
-    this.headers.map((x) => {
-      if (x.date) {
-        this.date_column = x.title;
-        dateCounter += 1;
-      }
-
-      if (dateCounter > 1) throw new Error('No puede haber mas de un campo DATE=TRUE');
-      return x;
-    });
-
-    if (this.options) {
-      Object.keys(this.options).map((key) => {
-        if (key in this.opts) {
-          if (key === 'checkeable' && typeof this.options[key] !== 'boolean') {
-            return null;
-          }
-          this.opts[key] = this.options[key];
-        }
-        return key;
-      });
-    }
-  },
   watch: {
     checkAll: {
       handler(val) {
         this.$emit('checkAll', val);
       },
     },
+  },
+  mounted() {
+    if (!this.values) throw new Error('Input VALUES is empty, please add data. (eg.: :values="myData")');
+    if (!this.headers) throw new Error('Input HEADERS is empty, please add data. (eg.: :headers="myHeaders")');
+
+    if (this.options) {
+      Object.keys(this.options).forEach((key) => {
+        if (key in this.opts) {
+          if (key === 'checkeable' && typeof this.options[key] !== 'boolean') {
+            throw new Error('Options "checkeable" must be a Boolean');
+          }
+          this.opts[key] = this.options[key];
+        }
+      });
+    }
   },
   methods: {
     pageChanged(val) {

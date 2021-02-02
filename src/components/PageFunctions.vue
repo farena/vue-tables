@@ -4,12 +4,21 @@
       <div class="p_func_item">
         <div class="flex-row">
           <label>Mostrar</label>
-          <select class="form-control" style="min-width: 50px"
-                  @change="changeShowing"
-                  v-model="showing">
-            <option value="10">10</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
+          <select
+            v-model="showing"
+            class="form-control"
+            style="min-width: 50px"
+            @change="changeShowing"
+          >
+            <option value="10">
+              10
+            </option>
+            <option value="50">
+              50
+            </option>
+            <option value="100">
+              100
+            </option>
           </select>
           <label>Items</label>
         </div>
@@ -17,42 +26,70 @@
       <div class="p_func_item">
         <div>
           <ul class="flex-row">
-            <li class="page-item-desktop"
-                @click.prevent="changePage(1)"
-                :class="current_page - 1 === 0 ? 'disabled' : ''">
-              <a class="page-link" href="#">Primera</a>
+            <li
+              class="page-item-desktop"
+              :class="current_page - 1 === 0 ? 'disabled' : ''"
+              @click.prevent="changePage(1)"
+            >
+              <a
+                class="page-link"
+                href="#"
+              >Primera</a>
             </li>
-            <li class="page-item-desktop" v-for="page in pages_list"
-                @click.prevent="changePage(page.number)"
-                :key="page.number"
-                :class="current_page === page.number ? 'active' : ''">
-              <a class="page-link" href="#">{{page.number}}</a>
+            <li
+              v-for="page in pages_list"
+              :key="page.number"
+              class="page-item-desktop"
+              :class="current_page === page.number ? 'active' : ''"
+              @click.prevent="changePage(page.number)"
+            >
+              <a
+                class="page-link"
+                href="#"
+              >{{ page.number }}</a>
             </li>
-            <li class="page-item-desktop"
-                @click.prevent="changePage(last_page)"
-                :class="!last_page || current_page + 1 > last_page ? 'disabled' : ''">
-              <a class="page-link" href="#">Última</a>
+            <li
+              class="page-item-desktop"
+              :class="!lastPage || current_page + 1 > lastPage ? 'disabled' : ''"
+              @click.prevent="changePage(lastPage)"
+            >
+              <a
+                class="page-link"
+                href="#"
+              >Última</a>
             </li>
 
-
-            <li class="page-item-mobile"
-                @click.prevent="changePage(current_page - 1)"
-                :class="current_page - 1 === 0 ? 'disabled' : ''">
-              <a class="page-link" href="#">Anterior</a>
+            <li
+              class="page-item-mobile"
+              :class="current_page - 1 === 0 ? 'disabled' : ''"
+              @click.prevent="changePage(current_page - 1)"
+            >
+              <a
+                class="page-link"
+                href="#"
+              >Anterior</a>
             </li>
-            <li class="page-item-mobile"
-                @click.prevent="changePage(current_page + 1)"
-                :class="current_page + 1 > last_page ? 'disabled' : ''">
-              <a class="page-link" href="#">Siguiente</a>
+            <li
+              class="page-item-mobile"
+              :class="current_page + 1 > lastPage ? 'disabled' : ''"
+              @click.prevent="changePage(current_page + 1)"
+            >
+              <a
+                class="page-link"
+                href="#"
+              >Siguiente</a>
             </li>
-
-
           </ul>
         </div>
       </div>
       <div class="p_func_item">
         <div>
-          <input type="text" placeholder="Buscar..." @change="search" class="form-control">
+          <input
+            type="text"
+            placeholder="Buscar..."
+            class="form-control"
+            @change="search"
+          >
         </div>
       </div>
     </div>
@@ -62,7 +99,7 @@
 <script>
 /**
    * # INPUT
-   * - last_page | required
+   * - lastPage | required
    *
    * # OUTPUT
    * - changing_page
@@ -70,6 +107,16 @@
    * - changing_showing
    */
 export default {
+  props: {
+    lastPage: {
+      type: [Number, String],
+      default: 1,
+    },
+    actualPage: {
+      type: [Number, String],
+      default: 1,
+    },
+  },
   data() {
     return {
       showing: 10,
@@ -77,17 +124,17 @@ export default {
       pages_list: [],
     };
   },
-  mounted() {
-    this.doPagesList();
-  },
   watch: {
     // eslint-disable-next-line no-unused-vars
-    last_page(oldVal, newVal) {
+    lastPage(oldVal, newVal) {
       this.doPagesList();
     },
-    actual_page(val) {
+    actualPage(val) {
       this.current_page = val;
     },
+  },
+  mounted() {
+    this.doPagesList();
   },
   methods: {
     doPagesList() {
@@ -110,7 +157,7 @@ export default {
       }
 
       // Agrego los items despues del actual
-      let rest = this.last_page - this.current_page;
+      let rest = this.lastPage - this.current_page;
 
       if (rest !== 0) {
         // reasigno a la cantidad maxima de paginas por delante
@@ -125,7 +172,7 @@ export default {
     },
 
     changePage(number) {
-      if (number > 0 || number <= this.last_page()) {
+      if (number > 0 || number <= this.lastPage()) {
         this.current_page = number;
         this.doPagesList();
         this.$emit('changing_page', number);
@@ -140,7 +187,6 @@ export default {
       this.$emit('searching', evt.target.value);
     },
   },
-  props: ['last_page', 'actual_page'],
 };
 </script>
 

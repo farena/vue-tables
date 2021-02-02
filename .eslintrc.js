@@ -1,18 +1,29 @@
 module.exports = {
-  root: true,
   env: {
+    browser: true,
+    es6: true,
     node: true,
   },
-  extends: [
-    'plugin:vue/essential',
-    '@vue/airbnb',
-  ],
   parserOptions: {
     parser: 'babel-eslint',
   },
+  extends: [
+    'airbnb-base',
+    'plugin:vue/recommended',
+  ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'vue/no-use-v-if-with-v-for': 'off',
+    'max-len': 'off',
+    'no-param-reassign': 'off',
+    'no-underscore-dangle': 'off',
+    'no-undef': 'off',
+    'no-restricted-syntax': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      webpack: {
+        config: require.resolve('@vue/cli-service/webpack.config.js'),
+      },
+    },
   },
 };
