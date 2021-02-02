@@ -8,6 +8,9 @@
       :headers="vTable.headers"
       :actions="vTable.actions"
       :options="vTable.options"
+      @onEdit="onEdit"
+      @onSave="onSave"
+      @editableInput="onItemChanged"
     />
   </div>
 </template>
@@ -31,6 +34,26 @@ export default {
           {
             title: 'username',
             sortable: true,
+            editable: 'text',
+          },
+          {
+            title: 'age',
+            sortable: true,
+            editable: 'number',
+          },
+          {
+            title: 'validated',
+            sortable: true,
+            editable: 'checkbox',
+          },
+          {
+            title: 'role.name',
+            editable: 'select',
+            options: [
+              { id: 'admin', label: 'admin' },
+              { id: 'manager', label: 'manager' },
+              { id: 'user', label: 'user' },
+            ],
           },
         ],
         actions: [
@@ -38,25 +61,35 @@ export default {
             buttonClass: 'btn-warning',
             tooltip: 'Show Details',
             callback: 'onShowDetails',
-            icon: 'search',
+            icon: 'fas fa-search',
           },
           {
             buttonClass: 'btn-info',
             tooltip: 'Edit User',
             callback: 'onEdit',
-            icon: 'edit',
+            icon: 'fas fa-edit',
+          },
+          {
+            buttonClass: 'btn-success',
+            tooltip: 'Save User',
+            callback: 'onSave',
+            icon: 'fas fa-save',
           },
           {
             buttonClass: 'btn-danger',
             tooltip: 'Delete User',
             callback: 'onDelete',
-            icon: 'close',
+            icon: 'fas fa-times',
           },
         ],
         values: {},
         options: {
           checkeable: true,
           searchable: false,
+          inputContainerClass: 'form-group',
+          inputClass: 'form-control',
+          checkboxContainerClass: 'form-check',
+          checkboxClass: 'form-check-input',
         },
       },
     };
@@ -68,11 +101,6 @@ export default {
         per_page: 15,
         current_page: 1,
         last_page: 1,
-        first_page_url: 'http://my.app?page=1',
-        last_page_url: 'http://my.app?page=1',
-        next_page_url: 'http://my.app?page=1',
-        prev_page_url: null,
-        path: 'http://my.app',
         from: 1,
         to: 15,
         data: [
@@ -80,23 +108,56 @@ export default {
             id: 1,
             name: 'Pedro Aznar',
             username: 'paznar',
+            age: 18,
+            validated: true,
+            role: {
+              name: 'admin',
+            },
           },
           {
             id: 2,
             name: 'Charlie Alberti',
             username: 'chalberti',
+            age: 20,
+            validated: false,
+            role: {
+              name: 'manager',
+            },
           },
           {
             id: 3,
             name: 'Gustavo Cerati',
             username: 'gcerati',
+            age: 25,
+            validated: false,
+            role: {
+              name: 'user',
+            },
           },
         ],
       };
-    }, 10000);
+    }, 1000);
+  },
+  methods: {
+    onEdit(item, index) {
+      this.vTable.values.data[index].editable = true;
+    },
+    onSave(item) {
+      item.editable = false;
+      // axios call to backend
+    },
+    onItemChanged(index, attribute, value) {
+      console.log({
+        index,
+        attribute,
+        value,
+      });
+    },
   },
 };
 </script>
 
-<style lang="scss">
+<style>
+@import 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css';
+@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css';
 </style>

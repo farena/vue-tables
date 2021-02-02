@@ -72,30 +72,68 @@
               >
             </td>
 
-            <template
-              v-if="truncate"
+            <td
+              v-for="(head,b) in headers"
+              :key="b"
+              :class="{
+                'v-table-editable-td': head.editable
+              }"
             >
-              <td
-                v-for="(head,b) in headers"
-                :key="b"
-              >
-                <span v-if="item[head.title] && item[head.title].length >= truncate">
-                  {{ head.pre }}{{ item[head.title].slice(0,truncate-3)+'...' }}
-                  <span class="v-table-tooltip">{{ item[head.title] }}</span>
-                </span>
-                <span v-else>
-                  {{ head.pre }}{{ item[head.title] }}
-                </span>
-              </td>
-            </template>
-            <template v-else>
-              <td
-                v-for="(head,b) in headers"
-                :key="b"
-              >
-                {{ head.pre }}{{ item[head.title] }}
-              </td>
-            </template>
+              <template v-if="head.truncate && nestedTitle(item,head.title).length >= head.truncate">
+                {{ nestedTitle(item, head.title).slice(0,head.truncate-3)+'...' }}
+                <span class="v-table-tooltip">{{ nestedTitle(item, head.title) }}</span>
+              </template>
+              <template v-else-if="head.editable">
+                <div
+                  v-if="head.editable !== 'checkbox'"
+                  class="v-table-input-container"
+                  :class="opts.inputContainerClass"
+                >
+                  <input
+                    v-if="['text','number'].includes(head.editable)"
+                    class="v-table-input"
+                    :class="opts.inputClass"
+                    :type="head.editable"
+                    :value="nestedTitle(item,head.title)"
+                    @input="$emit('editableInput',a, head.title, $event.target.value)"
+                    @change="$emit('editableChange',a, head.title, $event.target.value)"
+                  >
+                  <select
+                    v-if="head.editable === 'select'"
+                    :class="opts.inputClass"
+                    class="v-table-input"
+                    :value="nestedTitle(item,head.title)"
+                    @input="$emit('editableInput',a, head.title, $event.target.value)"
+                    @change="$emit('editableChange',a, head.title, $event.target.value)"
+                  >
+                    <option
+                      v-for="o in head.options"
+                      :key="o.id"
+                      :value="o.id"
+                    >
+                      {{ o.label }}
+                    </option>
+                  </select>
+                </div>
+                <div
+                  v-else
+                  class="v-table-checkbox-container"
+                  :class="opts.checkboxContainerClass"
+                >
+                  <input
+                    class="v-table-checkbox"
+                    :class="opts.checkboxClass"
+                    :type="head.editable"
+                    :checked="nestedTitle(item,head.title)"
+                    @input="$emit('editableInput',a, head.title, $event.target.checked)"
+                    @change="$emit('editableChange',a, head.title, $event.target.checked)"
+                  >
+                </div>
+              </template>
+              <template v-else>
+                {{ nestedTitle(item, head.title) }}
+              </template>
+            </td>
 
             <td style="text-align: right">
               <div class="btn-group">
@@ -107,7 +145,7 @@
                     :key="i"
                     class="btn btn-sm"
                     :class="act.buttonClass"
-                    @click="$emit(act.callback,item)"
+                    @click="$emit(act.callback,item,a)"
                   >
                     <i :class="act.icon" />
                     <span class="v-table-tooltip">{{ act.tooltip }}</span>
@@ -211,10 +249,6 @@ export default {
       type: Array,
       default: () => ([]),
     },
-    truncate: {
-      type: [Number, Boolean],
-      default: false,
-    },
   },
   data() {
     return {
@@ -223,8 +257,10 @@ export default {
         theadClass: '',
         tbodyClass: '',
         checkeable: false,
-        searchable: true,
-
+        inputContainerClass: '',
+        inputClass: '',
+        checkboxContainerClass: '',
+        checkboxClass: '',
       },
       sortedBy: '',
       sortedDir: 'asc',
@@ -301,6 +337,20 @@ export default {
       this.$emit('changed', this.vTableParams);
     },
 
+    nestedTitle(item, val) {
+      const value = item[val];
+      if (!value) {
+        const array = val.split('.');
+        let aux = item;
+
+        array.forEach((attr) => {
+          aux = aux[attr] === null || aux[attr] === undefined ? '-' : aux[attr];
+        });
+        return aux;
+      }
+      return value;
+    },
+
     init() {
       this.$emit('changed', {
         page: 1,
@@ -364,6 +414,18 @@ export default {
     transform: translateX(-50%);
     opacity: 0;
     transition: ease .5s;
+  }
+
+  .v-table-input-container,
+  .v-table-input-container .v-table-input {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border: unset;
+  }
+  .v-table-input-container .v-table-input[type=checkbox] {
+    width: auto;
+    height: unset;
   }
 
   .btn:hover .v-table-tooltip,
