@@ -61,11 +61,6 @@ data() {
           per_page: 15,
           current_page: 1,
           last_page: 1,
-          first_page_url: 'http://my.app?page=1',
-          last_page_url: 'http://my.app?page=1',
-          next_page_url: 'http://my.app?page=1',
-          prev_page_url: null,
-          path: 'http://my.app',
           from: 1,
           to: 15,
           data: [
@@ -103,8 +98,14 @@ headers: [
         title: 'username', // Name of the key in values.data
         mask: 'sign in user', // Title for this column at render
         sortable: true, // Boolean
-        width: 50, // (%) Percentage width of the full table
+        sort_value: 'u_name', // (Optional) Name of the column to sort in backend. If it doesnt exist, we send the title string to sort. 
+        width: 50, // (Optional)(%) Percentage width of the full table
+        editable: 'TYPE' // (Optional) The column is editable, can be any of these types => ['text','number','select','checkbox']
+        options: [ { id:1, label: 'option 1' } ], // If is an Editable type 'Select' have to send the options.
     },
+    {
+      title: 'role.name', // we can concatenate JSON attributes.
+    }
 ],
 ```
 

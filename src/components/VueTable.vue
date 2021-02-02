@@ -1,15 +1,15 @@
 <template>
   <div>
     <page-functions
-      :actual_page="values.current_page"
-      :last_page="values.last_page"
+      :actual-page="values.current_page"
+      :last-page="values.last_page"
       :searchable="opts.searchable"
       @changing_page="pageChanged"
       @searching="searched"
       @changing_showing="showChanged"
     />
 
-    <div>
+    <div class="v-table-responsive-container">
       <table :class="opts.tableClass">
         <thead :class="opts.theadClass">
           <tr>
@@ -27,7 +27,7 @@
                 :class="head.sortable ? 'sortable' : ''"
                 @click="sorted(head)"
               >
-                {{ head.mask ? head.mask.ucwords() : head.title ? head.title.ucwords() : '' }}
+                {{ (head.mask || head.title).ucwords() }}
 
                 <i
                   v-if="head.sortable &&
@@ -300,6 +300,8 @@ export default {
         }
       });
     }
+
+    console.log(this.values);
   },
   methods: {
     pageChanged(val) {
@@ -324,7 +326,7 @@ export default {
           this.sortedDir = 'asc';
         }
 
-        this.sortedBy = item.sort_value ? item.sort_value : item.title;
+        this.sortedBy = item.sort_value || item.title;
 
         this.vTableParams.sortBy = this.sortedBy;
         this.vTableParams.sortDir = this.sortedDir;
@@ -366,6 +368,10 @@ export default {
 </script>
 
 <style scoped>
+  .v-table-responsive-container {
+    width: 100%;
+    overflow: auto;
+  }
   table {
     width: 100%;
   }

@@ -24,6 +24,17 @@
         </div>
       </div>
       <div class="p_func_item">
+        <input
+          v-if="searchable"
+          type="text"
+          placeholder="Buscar..."
+          class="form-control"
+          @change="search"
+        >
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="p_func_item">
         <div>
           <ul class="flex-row">
             <li
@@ -80,16 +91,6 @@
               >Siguiente</a>
             </li>
           </ul>
-        </div>
-      </div>
-      <div class="p_func_item">
-        <div v-if="searchable">
-          <input
-            type="text"
-            placeholder="Buscar..."
-            class="form-control"
-            @change="search"
-          >
         </div>
       </div>
     </div>
@@ -199,23 +200,52 @@ export default {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    padding: 3px 0;
   }
   .p_func {
     margin: 30px 0;
+
     &_item {
-      @media(max-width: 767px) {
-        width: 100%;
-        margin-bottom: 15px;
-      }
-      @media(min-width: 768px) {
-        width: 33.33%;
-      }
+      flex-grow: 1;
       text-align: center;
+
+      input {
+        max-width: 300px;
+        display: block;
+        margin-left: auto;
+      }
+
+      > .flex-row {
+        align-items: flex-end;
+
+        select {
+          flex: 1;
+          margin: 0 15px;
+          max-width: 200px;
+        }
+
+        label:last-child {
+          margin-right: auto;
+        }
+      }
 
       ul {
         list-style: none;
         margin: 0;
         padding: 0;
+      }
+
+      @media (max-width: 767px) {
+        flex-grow: 0;
+        width:100%;
+
+        input {
+          margin: auto;
+        }
+
+        > .flex-row label:last-child {
+          margin: unset;
+        }
       }
     }
   }

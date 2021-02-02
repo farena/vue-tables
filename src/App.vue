@@ -1,17 +1,19 @@
 <template>
   <div id="app">
-    <h1>Vue Tables</h1>
-    <vue-table
-      v-if="vTable.headers"
-      ref="vtable"
-      :values="vTable.values"
-      :headers="vTable.headers"
-      :actions="vTable.actions"
-      :options="vTable.options"
-      @onEdit="onEdit"
-      @onSave="onSave"
-      @editableInput="onItemChanged"
-    />
+    <div class="container">
+      <h1>Vue Tables</h1>
+      <vue-table
+        v-if="vTable.headers"
+        ref="vtable"
+        :values="vTable.values"
+        :headers="vTable.headers"
+        :actions="vTable.actions"
+        :options="vTable.options"
+        @onEdit="onEdit"
+        @onSave="onSave"
+        @editableInput="onItemChanged"
+      />
+    </div>
   </div>
 </template>
 
@@ -37,6 +39,21 @@ export default {
             editable: 'text',
           },
           {
+            title: 'username',
+            sortable: true,
+            editable: 'text',
+          },
+          {
+            title: 'username',
+            sortable: true,
+            editable: 'text',
+          },
+          {
+            title: 'username',
+            sortable: true,
+            editable: 'text',
+          },
+          {
             title: 'age',
             sortable: true,
             editable: 'number',
@@ -48,6 +65,7 @@ export default {
           },
           {
             title: 'role.name',
+            mask: 'role',
             editable: 'select',
             options: [
               { id: 'admin', label: 'admin' },
@@ -97,10 +115,10 @@ export default {
   mounted() {
     setTimeout(() => {
       this.vTable.values = {
-        total: 3,
+        total: 300,
         per_page: 15,
         current_page: 1,
-        last_page: 1,
+        last_page: 11,
         from: 1,
         to: 15,
         data: [
