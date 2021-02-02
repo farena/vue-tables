@@ -129,6 +129,9 @@
               <template v-else-if="head.callback">
                 {{ head.callback(nestedTitle(item, head.title)) }}
               </template>
+              <template v-else-if="head.dateFormat">
+                {{ dateFormatting(nestedTitle(item, head.title), head.dateFormat, head.dateFromFormat) }}
+              </template>
               <template v-else-if="head.truncate && nestedTitle(item,head.title).length >= head.truncate">
                 {{ nestedTitle(item, head.title).slice(0,head.truncate-3)+'...' }}
                 <span class="v-table-tooltip">{{ nestedTitle(item, head.title) }}</span>
@@ -226,6 +229,7 @@
    */
 import '../utils/ucwords';
 import '../utils/paginable';
+import moment from 'moment';
 import PageFunctions from './PageFunctions.vue';
 import loader from './loader.vue';
 
@@ -303,8 +307,6 @@ export default {
         }
       });
     }
-
-    console.log(this.values);
   },
   methods: {
     pageChanged(val) {
@@ -354,6 +356,15 @@ export default {
         return aux;
       }
       return value;
+    },
+
+    dateFormatting(date, format, fromFormat = null) {
+      let d = date;
+      if (!(date instanceof moment)) {
+        if (fromFormat) d = moment(date, fromFormat, true);
+        else d = moment(date);
+      }
+      return d.format(format);
     },
 
     init() {

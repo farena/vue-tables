@@ -106,6 +106,8 @@ headers: [
       options: [ { id:1, label: 'option 1' } ], // If is an Editable type 'Select' have to send the options.
       truncate: 100 // type Number. Maximum length for a string.
       callback: function (item) { /.../ } // send a function to execute on the value. return whatever you want.
+      dateFormat: 'DD-MM-YYYY' // send a valid MOMENT date format.
+      dateFromFormat: 'YYYY-MM-DD' // send a valid MOMENT date format, if your origin format is not the default for moment 'YYYY-MM-DDTHH:mm:ssZ'
     }
 ],
 ```

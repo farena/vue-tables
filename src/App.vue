@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import VueTable from './components/VueTable.vue';
 
 export default {
@@ -34,19 +35,10 @@ export default {
             sortable: true,
           },
           {
-            title: 'username',
+            title: 'birth_date',
+            mask: 'birth date',
+            dateFormat: 'DD-MM-YYYY',
             sortable: true,
-            editable: 'text',
-          },
-          {
-            title: 'username',
-            sortable: true,
-            editable: 'text',
-          },
-          {
-            title: 'username',
-            sortable: true,
-            editable: 'text',
           },
           {
             title: 'username',
@@ -126,6 +118,7 @@ export default {
             id: 1,
             name: 'Pedro Aznar',
             username: 'paznar',
+            birth_date: '1980-05-15',
             age: 18,
             validated: true,
             role: {
@@ -136,6 +129,7 @@ export default {
             id: 2,
             name: 'Charlie Alberti',
             username: 'chalberti',
+            birth_date: moment('1975-03-25'),
             age: 20,
             validated: false,
             role: {
@@ -146,6 +140,7 @@ export default {
             id: 3,
             name: 'Gustavo Cerati',
             username: 'gcerati',
+            birth_date: '1990-10-02',
             age: 25,
             validated: false,
             role: {
