@@ -79,11 +79,7 @@
                 'v-table-editable-td': head.editable
               }"
             >
-              <template v-if="head.truncate && nestedTitle(item,head.title).length >= head.truncate">
-                {{ nestedTitle(item, head.title).slice(0,head.truncate-3)+'...' }}
-                <span class="v-table-tooltip">{{ nestedTitle(item, head.title) }}</span>
-              </template>
-              <template v-else-if="head.editable">
+              <template v-if="head.editable">
                 <div
                   v-if="head.editable !== 'checkbox'"
                   class="v-table-input-container"
@@ -129,6 +125,13 @@
                     @change="$emit('editableChange',a, head.title, $event.target.checked)"
                   >
                 </div>
+              </template>
+              <template v-else-if="head.callback">
+                {{ head.callback(nestedTitle(item, head.title)) }}
+              </template>
+              <template v-else-if="head.truncate && nestedTitle(item,head.title).length >= head.truncate">
+                {{ nestedTitle(item, head.title).slice(0,head.truncate-3)+'...' }}
+                <span class="v-table-tooltip">{{ nestedTitle(item, head.title) }}</span>
               </template>
               <template v-else>
                 {{ nestedTitle(item, head.title) }}

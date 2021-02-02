@@ -95,16 +95,17 @@ data() {
 ```
 headers: [
     {
-        title: 'username', // Name of the key in values.data
-        mask: 'sign in user', // Title for this column at render
-        sortable: true, // Boolean
-        sort_value: 'u_name', // (Optional) Name of the column to sort in backend. If it doesnt exist, we send the title string to sort. 
-        width: 50, // (Optional)(%) Percentage width of the full table
-        editable: 'TYPE' // (Optional) The column is editable, can be any of these types => ['text','number','select','checkbox']
-        options: [ { id:1, label: 'option 1' } ], // If is an Editable type 'Select' have to send the options.
-    },
-    {
+      title: 'username', // Name of the key in values.data
       title: 'role.name', // we can concatenate JSON attributes.
+      
+      mask: 'sign in user', // Title for this column at render
+      sortable: true, // Boolean
+      sort_value: 'u_name', // (Optional) Name of the column to sort in backend. If it doesnt exist, we send the title string to sort. 
+      width: 50, // (Optional)(%) Percentage width of the full table
+      editable: 'TYPE' // (Optional) The column is editable, can be any of these types => ['text','number','select','checkbox']
+      options: [ { id:1, label: 'option 1' } ], // If is an Editable type 'Select' have to send the options.
+      truncate: 100 // type Number. Maximum length for a string.
+      callback: function (item) { /.../ } // send a function to execute on the value. return whatever you want.
     }
 ],
 ```
