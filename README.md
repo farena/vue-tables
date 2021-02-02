@@ -154,10 +154,14 @@ export default {
 ## Available Options
 ```
 options: {
-   tableClass: 'customTableClass', // Table Class. Default: 'table table-bordered table-hover' 
-   theadClass: 'customTHeadClass', // Table Head class. Default: null
-   tbodyClass: 'customTBodyClass', // Table Body class. Default: null 
-   checkeable: false, // Boolean / Activate the checkboxes option
+  tableClass: 'customTableClass', // Table Class. Default: 'table table-bordered table-hover' 
+  theadClass: 'customTHeadClass', // Table Head class. Default: null
+  tbodyClass: 'customTBodyClass', // Table Body class. Default: null 
+  checkeable: false, // Boolean / Activate the checkboxes option
+  inputContainerClass: 'form-group', // class for editable colums type 'text','number','select' input container
+  inputClass: 'form-control', // class for editable colums type 'text','number','select' input
+  checkboxContainerClass: 'form-check', // class for editable colums type 'checkbox' input container
+  checkboxClass: 'form-check-input', // class for editable colums type 'checkbox' input
 },
 ```
 
@@ -358,6 +362,40 @@ export default {
   },
 }
 </script>
+```
+
+## Editable Columns
+
+You can add editable columns type: TEXT, NUMBER, SELECT and CHECKBOX
+Every editable column will emit 'editableInput' callback
+
+```
+<template>    
+    <vue-table
+      v-if="vTable.headers"
+      :values="values"
+      :headers="vTable.headers"
+      :actions="vTable.actions"
+      :options="vTable.options"
+      ref="vtable"
+      @editableInput="onItemChanged"
+    />
+</template>
+
+...
+
+methods: {
+  onItemChanged(index, attribute, value) {
+    console.log({
+      index,
+      attribute,
+      value,
+    });
+
+    // You can now, either store the data directly into the backend, 
+    // or update the VALUES array and send it all together after.
+  },
+}
 ```
 
 ## Custom CSS
