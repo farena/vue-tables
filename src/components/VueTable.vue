@@ -3,6 +3,7 @@
     <page-functions
       :actual_page="values.current_page"
       :last_page="values.last_page"
+      :searchable="opts.searchable"
       @changing_page="pageChanged"
       @searching="searched"
       @changing_showing="showChanged"
@@ -255,6 +256,9 @@ export default {
         if (key in this.opts) {
           if (key === 'checkeable' && typeof this.options[key] !== 'boolean') {
             throw new Error('Options "checkeable" must be a Boolean');
+          }
+          if (key === 'searchable' && typeof this.options[key] !== 'boolean') {
+            throw new Error('Options "searchable" must be a Boolean');
           }
           this.opts[key] = this.options[key];
         }

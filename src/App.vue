@@ -56,6 +56,7 @@ export default {
         values: {},
         options: {
           checkeable: true,
+          searchable: false,
         },
       },
     };

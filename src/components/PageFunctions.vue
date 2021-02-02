@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="p_func_item">
-        <div>
+        <div v-if="searchable">
           <input
             type="text"
             placeholder="Buscar..."
@@ -115,6 +115,10 @@ export default {
     actualPage: {
       type: [Number, String],
       default: 1,
+    },
+    searchable: {
+      type: [Boolean, Number],
+      default: true,
     },
   },
   data() {
